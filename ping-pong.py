@@ -31,9 +31,16 @@ class Player(GameSprite):
         if keys[K_s] and self.rect.y < 700 - 80:
             self.rect.y += self.speed
 
-racket_1 = Player('racket.png', 30, 200, 10, 50, 5)
-racket_2 = Player('racket.png', 620, 200, 10, 50, 5)
+racket_1 = Player('racket_l.png', 5, 200, 10, 50, 5)
+racket_2 = Player('racket_r.png', 690, 200, 10, 50, 5)
 ball = GameSprite('ball.png', 200, 200, 50, 50, 10)
+
+speed_y = 3
+speed_x = 3
+font.init()
+font = font.Font(None, 35)
+lose1 = font.render('PLAYER 1 LOSE!', True, (180, 0, 0))
+lose2 = font.render('PLAYER 2 LOSE!', True, (180, 0, 0))
 
 game = True
 finish = False
@@ -48,8 +55,27 @@ while game:
         racket_1.update_l()
         racket_2.update_r()
 
+        
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
+        if sprite.collide_rect(racket_1, ball) or sprite.collide_rect(racket_2, ball):
+            speed_x *= -1
+            speed_y *= -1
+        if ball.rect.y > 500-50 or ball.rect.y < 0:
+            speed_y *= -1
+        if ball.rect.x < 0:
+            finish = True
+            window.blit(lose1, (200, 200))
+            game_over = True
+        if ball.rect.x > 700:
+            finish = True
+            window.blit(lose2, (200, 200))
+            game_over = True
+
         racket_1.reset()
         racket_2.reset()
+        ball.reset()
+
 
 
 
